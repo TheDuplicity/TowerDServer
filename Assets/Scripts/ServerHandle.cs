@@ -35,7 +35,6 @@ public class ServerHandle : MonoBehaviour
             //have a timer that only gets reset once it gets an alive response
             Server.clients[fromClient].connectedTimer = 0;
             Debug.Log($"client {fromClient} alive");
-
         }
     }
 
@@ -43,29 +42,17 @@ public class ServerHandle : MonoBehaviour
     {
         Debug.Log("received player type: sending back");
         int type = packet.ReadInt();
-        Vector2[] suh = new Vector2[1];
-        suh[0] = new Vector2(2, 0.5f);
-        int[] suhi = new int[1];
-        suhi[0] = 2;
-        int[] ftype = new int[1];
-        ftype[0] = 0;
-        float[] rot = new float[1];
-        rot[0] = 90;
 
-        ServerSend.JoinGameData(fromClient, type, 1,suh, suhi,ftype,rot);
-        switch (type)
+
+       // ServerSend.JoinGameData(fromClient, type, 1,suh, suhi,ftype,rot);
+        if (type == 0)
         {
-            //tower
-            case 0:
-
-                break;
-                //minion
-            case 1:
-
-                break;
-            default:
-                break;
+            GameManager.Instance.addTower(fromClient);
+        } else if (type == 1)
+        {
+            GameManager.Instance.addMinion(fromClient);
         }
+
     }
 
 }

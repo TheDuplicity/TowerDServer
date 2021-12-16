@@ -3,7 +3,11 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - FinishTile
+  - Bullet
+  - TowerTile
+  - MinionTile
   layers:
   - Default
   - TransparentFX
@@ -40,4 +44,13 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Background
+    uniqueID: 1104813251
+    locked: 0
+  - name: Foreground
+    uniqueID: 1923579423
+    locked: 0
+  - name: SuperForeground
+    uniqueID: 277983697
     locked: 0
