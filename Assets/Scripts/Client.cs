@@ -9,7 +9,7 @@ using System.Net.Sockets;
     public class Client
     {
     public float connectedTimer;
-        public static int dataBufferSize = 4096;
+        public static int dataBufferSize = 1500;
         public int id;
         public TCP tcp;
 

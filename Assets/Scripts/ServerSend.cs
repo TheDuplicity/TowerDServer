@@ -62,12 +62,23 @@ using UnityEngine;
         }
 
     }
-
-    public static void JoinGameData(int toClient)
+    // positions, euler rotations about z  ,ids, type(minion/tower), some time data?, number of other players
+    public static void JoinGameData(int toClient, int playerType, int numPlayers ,Vector2[] positions, int[] ids, int[] type, float[] zRotations)
     {
         using (Packet packet = new Packet((int)ServerPackets.joinGameData))
         {
-            packet.Write("data here");
+            //0 for tower 1 for minion
+            packet.Write(playerType);
+            packet.Write(numPlayers);
+            for (int i = 0; i < numPlayers; i++)
+            {
+                packet.Write(type[i]);
+                packet.Write(ids[i]);
+                packet.Write(positions[i].x);
+                packet.Write(positions[i].y);
+                packet.Write(zRotations[i]);
+            }
+
             SendTCPData(toClient, packet);
         }
     }

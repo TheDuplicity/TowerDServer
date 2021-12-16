@@ -43,7 +43,16 @@ public class ServerHandle : MonoBehaviour
     {
         Debug.Log("received player type: sending back");
         int type = packet.ReadInt();
-        ServerSend.JoinGameData(fromClient);
+        Vector2[] suh = new Vector2[1];
+        suh[0] = new Vector2(2, 0.5f);
+        int[] suhi = new int[1];
+        suhi[0] = 2;
+        int[] ftype = new int[1];
+        ftype[0] = 0;
+        float[] rot = new float[1];
+        rot[0] = 90;
+
+        ServerSend.JoinGameData(fromClient, type, 1,suh, suhi,ftype,rot);
         switch (type)
         {
             //tower

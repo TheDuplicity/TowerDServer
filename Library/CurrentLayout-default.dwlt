@@ -338,19 +338,19 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets
+    - Assets/Scripts
   m_ViewMode: 1
   m_StartGridSize: 64
   m_LastFolders:
-  - Assets
+  - Assets/Scripts
   m_LastFoldersGridSize: -1
   m_LastProjectPath: C:\Unity\Games\TowerDServer
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
     scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: 5a390000
-    m_LastClickedID: 14682
+    m_SelectedIDs: f8390000
+    m_LastClickedID: 14840
     m_ExpandedIDs: 000000005a39000000ca9a3b
     m_RenameOverlay:
       m_UserAcceptedRename: 0
@@ -404,8 +404,8 @@ MonoBehaviour:
       m_Icon: {fileID: 0}
       m_ResourceFile: 
   m_ListAreaState:
-    m_SelectedInstanceIDs: 2a390000
-    m_LastClickedInstanceID: 14634
+    m_SelectedInstanceIDs: 90310000
+    m_LastClickedInstanceID: 12688
     m_HadKeyboardFocusLastEvent: 1
     m_ExpandedInstanceIDs: c6230000da390000ac3a0000
     m_RenameOverlay:
@@ -464,8 +464,8 @@ MonoBehaviour:
   m_SceneHierarchy:
     m_TreeViewState:
       scrollPos: {x: 0, y: 0}
-      m_SelectedIDs: 2a390000
-      m_LastClickedID: 14634
+      m_SelectedIDs: 90310000
+      m_LastClickedID: 0
       m_ExpandedIDs: 64fbffff
       m_RenameOverlay:
         m_UserAcceptedRename: 0
