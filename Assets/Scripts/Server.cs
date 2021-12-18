@@ -182,7 +182,9 @@ using System.Net.Sockets;
                 { (int)ClientPackets.clientAlive, ServerHandle.ClientAlive },
                 { (int)ClientPackets.attemptMinionCreation, ServerHandle.AttemptMinionCreation},
                 { (int)ClientPackets.attemptTowerCreation, ServerHandle.AttemptTowerCreation},
-                { (int)ClientPackets.timePing, ServerHandle.TimePing}
+                { (int)ClientPackets.timePing, ServerHandle.TimePing},
+                { (int)ClientPackets.minionUpdate, ServerHandle.MinionUpdate},
+                { (int)ClientPackets.towerUpdate, ServerHandle.TowerUpdate}
 
             };
 

@@ -8,20 +8,13 @@ public class Controllable : MonoBehaviour
     private float maxMessages;
     private int id;
     public int type;
-    public struct message
-    {
-        int id;
-        Vector2 position;
-        float rotation;
-    }
 
-    Queue<message> messages;
+
     // Start is called before the first frame update
     void Start()
     {
 
-        maxMessages = 3;
-        messages = new Queue<message>();
+
     }
 
     private void Update()
@@ -36,10 +29,7 @@ public class Controllable : MonoBehaviour
 
         }
         */
-        while (messages.Count > maxMessages)
-        {
-            messages.Dequeue();
-        }
+
     }
 
     public void setId(int setId)

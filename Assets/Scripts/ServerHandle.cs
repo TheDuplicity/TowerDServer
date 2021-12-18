@@ -75,4 +75,22 @@ public class ServerHandle : MonoBehaviour
         ServerSend.TimePing(fromClient, timerId);
     }
 
+    public static void TowerUpdate(int fromClient, Packet packet)
+    {
+        GameManager.towerDefaultMessage message;
+        message.time = packet.ReadFloat();
+        message.zRotation = packet.ReadFloat();
+        message.clientId = fromClient;
+        GameManager.Instance.updateTower(fromClient, message);
+    }
+
+    public static void MinionUpdate(int fromClient, Packet packet)
+    {
+        GameManager.minionDefaultMessage message;
+        message.time = packet.ReadFloat();
+        message.position = new Vector2(packet.ReadFloat(), packet.ReadFloat());
+        message.clientId = fromClient;
+        GameManager.Instance.UpdateMinion(fromClient, message);
+    }
+
 }

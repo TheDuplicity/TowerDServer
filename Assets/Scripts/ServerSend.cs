@@ -95,6 +95,31 @@ using UnityEngine;
             SendTCPData(toClient, packet);
         }
     }
+    public static void SendWorldUpdate(int toClient, float gameTime, int minionScore, int towerScore, GameManager.minionDefaultMessage[] minionMessages, GameManager.towerDefaultMessage[] towerMessages)
+    {
+
+        using (Packet packet = new Packet((int)ServerPackets.sendWorldUpdate))
+        {
+            //send message here
+            packet.Write(gameTime);
+            packet.Write(minionScore);
+            packet.Write(towerScore);
+            packet.Write(minionMessages.Length);
+            for (int i = 0; i < minionMessages.Length; i++)
+            {
+                packet.Write(minionMessages[i].clientId);
+                packet.Write(minionMessages[i].position.x);
+                packet.Write(minionMessages[i].position.y);
+            }
+            packet.Write(towerMessages.Length);
+            for (int i = 0; i < towerMessages.Length; i++)
+            {
+                packet.Write(towerMessages[i].clientId);
+                packet.Write(towerMessages[i].zRotation);
+            }
+            SendTCPData(toClient, packet);
+        }
+    }
     public static void TimePing(int toClient, int timerId)
     {
 

@@ -5,12 +5,18 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
 
-    struct minionDefaultMessage
+    public struct minionDefaultMessage
     {
-        Vector2 position;
-
+        public int clientId;
+        public Vector2 position;
+        public float time;
     }
-
+    public struct towerDefaultMessage
+    {
+        public int clientId;
+        public float zRotation;
+        public float time;
+    }
     //list of players that want to join and their tower types
     Dictionary<int, int> clientsWaitingToJoinAsType;
 
@@ -112,12 +118,94 @@ public class GameManager : MonoBehaviour
 
 
     }
-    private void getAllBasicClientData()
-    {
 
+    public void UpdateMinion(int clientId, minionDefaultMessage message)
+    {
+        GameObject minion = returnMinionWithThisClientId(clientId);
+        minion.GetComponent<Minion>().AddMessage(message);
+    }
+
+    public void updateTower(int clientId, towerDefaultMessage message)
+    {
+        GameObject tower = returnTowerWithThisClientId(clientId);
+        tower.GetComponent<Tower>().AddMessage(message);
+    }
+
+    private GameObject returnMinionWithThisClientId(int clientId)
+    {
+        foreach (GameObject minion in minions)
+        {
+            if (minion.GetComponent<Controllable>().getId() == clientId)
+            {
+                return minion;
+            }
+        }
+        return null;
+    }
+    private GameObject returnTowerWithThisClientId(int clientId)
+    {
+        foreach (GameObject tower in towers)
+        {
+            if (tower.GetComponent<Controllable>().getId() == clientId)
+            {
+                return tower;
+            }
+        }
+        return null;
+    }
+
+    public void sendDefaultUpdatesToEveryone()
+    {
+        minionDefaultMessage[] minionMessages = fillAllMinionMessages();
+        towerDefaultMessage[] towerMessages = fillAllTowerMessages();
+
+        for (int i = 0; i < minions.Count; i++)
+        {
+            ServerSend.SendWorldUpdate(minions[i].GetComponent<Controllable>().getId(), gameTime, minionScore, towerScore, minionMessages, towerMessages);
+        }
+        for (int i = 0; i < towers.Count; i++)
+        {
+            ServerSend.SendWorldUpdate(towers[i].GetComponent<Controllable>().getId(), gameTime, minionScore, towerScore, minionMessages, towerMessages);
+        }
+
+    }
+
+
+
+
+    private towerDefaultMessage[] fillAllTowerMessages()
+    {
+        int numTowers = towers.Count;
+        towerDefaultMessage[] messages = new towerDefaultMessage[numTowers];
+        for (int i = 0; i < numTowers; i++)
+        {
+            GameObject tower = towers[i];
+            messages[i].zRotation = tower.transform.rotation.eulerAngles.z;
+            messages[i].clientId = tower.GetComponent<Controllable>().getId();
+
+        }
+        return messages;
+    }
+
+    private minionDefaultMessage[] fillAllMinionMessages()
+    {
+        int numMinions = minions.Count;
+        minionDefaultMessage[] messages = new minionDefaultMessage[numMinions];
+        for (int i = 0; i < numMinions; i++)
+        {
+            GameObject minion = minions[i];
+            messages[i].position = new Vector2(minion.transform.position.x, minion.transform.position.y);
+            messages[i].clientId = minion.GetComponent<Controllable>().getId();
+
+        }
+        return messages;
     }
     public void sendWelcomePackage(int sendToId)
     {
+        if (gameStarted)
+        {
+            //send a package to the oother players givine them this new object
+        }
         int numPlayers= minions.Count + towers.Count;
         Vector2[] positions = new Vector2[numPlayers];
         int[] ids = new int[numPlayers];
@@ -148,7 +236,6 @@ public class GameManager : MonoBehaviour
 
     private void startGame()
     {
-        gameStarted = true;
         for (int i = 0; i < minions.Count; i++)
         {
             sendWelcomePackage(minions[i].GetComponent<Controllable>().getId());
@@ -157,6 +244,7 @@ public class GameManager : MonoBehaviour
         {
             sendWelcomePackage(towers[i].GetComponent<Controllable>().getId());
         }
+        gameStarted = true;
     }
 
     public bool addMinion(int clientId)
