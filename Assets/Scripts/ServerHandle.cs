@@ -40,14 +40,21 @@ public class ServerHandle : MonoBehaviour
 
     public static void AttemptMinionCreation(int fromClient, Packet packet)
     {
-        Debug.Log($"player {fromClient} wants to be minion");
 
 
         if (GameManager.Instance.addMinion(fromClient))
         {
-            if (GameManager.Instance.gameStarted)
+            bool inGame = packet.ReadBool();
+            if (!inGame)
             {
-                GameManager.Instance.sendWelcomePackage(fromClient);
+                if (GameManager.Instance.gameStarted)
+                {
+                    GameManager.Instance.sendWelcomePackage(fromClient);
+                }
+            }
+            else
+            {
+                GameManager.Instance.tellOtherPlayersIExist(fromClient);
             }
         }
         
@@ -61,10 +68,17 @@ public class ServerHandle : MonoBehaviour
         //if you were spawned and the game has started: send welcome package
         if(GameManager.Instance.trySpawnClientAsTower(fromClient, towerMousePos))
         {
+            bool inGame = packet.ReadBool();
+            if (!inGame) {
+                if (GameManager.Instance.gameStarted)
+                {
+                    GameManager.Instance.sendWelcomePackage(fromClient);
+                }
 
-            if (GameManager.Instance.gameStarted)
+            }
+            else
             {
-                GameManager.Instance.sendWelcomePackage(fromClient);
+                GameManager.Instance.tellOtherPlayersIExist(fromClient);
             }
         }
     }
@@ -92,5 +106,11 @@ public class ServerHandle : MonoBehaviour
         message.clientId = fromClient;
         GameManager.Instance.UpdateMinion(fromClient, message);
     }
+
+    public static void ShotBullet(int fromClient, Packet packet)
+    {
+        GameManager.Instance.shootBulletFromTower(fromClient);
+    }
+
 
 }

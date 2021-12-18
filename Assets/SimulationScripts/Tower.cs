@@ -33,6 +33,15 @@ public class Tower : Controllable
             updateTimer(ref wallSpawnCooldown);
             updateTimer(ref shootCooldown);
 
+        if (numBullets <= 0)
+        {
+
+            if (reloadTimer <= 0)
+            {
+                Reload();
+            }
+        }
+
         predictRotation();
 
     }
@@ -77,19 +86,31 @@ public class Tower : Controllable
     }
 
 
-    private void Shoot()
+    public void Shoot()
     {
+        if (reloadTimer > 0)
+        {
+            return;
+        } 
+        if (numBullets <= 0)
+        {
+            return;
+        }
+        if (shootCooldown > 0)
+        {
+            return;
+        }
         //spawn bullet with initial values
         shootCooldown = 0.35f;
         numBullets--;
-        Debug.Log("shoot");
 
         //Bullet createBullet = bulletPref.GetComponent<Bullet>();
         GameObject createBullet = Instantiate(bulletPref);
-        createBullet.GetComponent<Bullet>().createBulletData(6, 4, 25,transform.position, transform.rotation);
+        createBullet.GetComponent<Bullet>().createBulletData(9, 6, 25,transform.position, transform.rotation);
+        GameManager.Instance.SendTowerShotToAllPlayers(GetComponent<Controllable>().getId());
     }
 
-    private void SpawnWallAhead()
+    public void SpawnWallAhead()
     {
         //spawn wall at mouse position if in range of tower
         wallSpawnCooldown = 3.0f;
@@ -103,7 +124,7 @@ public class Tower : Controllable
         Debug.Log("reloading");
     }
 
-    private void rotate(bool rotateClockwise)
+    public void rotate(bool rotateClockwise)
     {
         if (rotateClockwise) {
             transform.rotation *= Quaternion.Euler(0,0,-90 * Time.deltaTime);
@@ -114,6 +135,12 @@ public class Tower : Controllable
             transform.rotation *= Quaternion.Euler(0, 0, 90 * Time.deltaTime);
             Debug.Log("rotating anti-clockwise");
         }
+    }
+
+    public void die()
+    {
+        Debug.Log("death");
+        GameManager.Instance.KillPlayerAndUpdateClients(GetComponent<Controllable>().getId());
     }
 
 }

@@ -99,8 +99,8 @@ public class Minion : Controllable
     }
     public void die()
     {
-        Debug.Log("death");       
-        Destroy(gameObject);
+        Debug.Log("death");
+        GameManager.Instance.KillPlayerAndUpdateClients(GetComponent<Controllable>().getId());
     }
 
 }

@@ -57,7 +57,7 @@ using System.Net.Sockets;
         public void closeSocket()
         {
             if (active) {
-                GameManager.Instance.kickPlayer(id);
+                GameManager.Instance.KillPlayerAndUpdateClients(id);
                 
 
                 

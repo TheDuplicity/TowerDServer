@@ -7,29 +7,12 @@ using UnityEngine;
         private static void SendTCPData(int toClient, Packet packet)
         {
             packet.WriteLength();
+        if (Server.clients[toClient].tcp.active)
+        {
             Server.clients[toClient].tcp.SendDataQueue(packet);
         }
-
-        private static void SendTCPDataToAll(Packet packet)
-        {
-            packet.WriteLength();
-            for (int i = 1; i <= Server.maxPlayers; i++)
-            {
-                Server.clients[i].tcp.SendDataQueue(packet);
-            }
         }
 
-        private static void SendTCPDataToAllButOne(int avoidClient, Packet packet)
-        {
-            packet.WriteLength();
-            for (int i = 1; i <= Server.maxPlayers; i++)
-            {
-                if (i != avoidClient)
-                {
-                    Server.clients[i].tcp.SendDataQueue(packet);
-                }
-            }
-        }
 
         public static void Welcome(int toClient, string msg)
         {
@@ -100,7 +83,7 @@ using UnityEngine;
 
         using (Packet packet = new Packet((int)ServerPackets.sendWorldUpdate))
         {
-            //send message here
+
             packet.Write(gameTime);
             packet.Write(minionScore);
             packet.Write(towerScore);
@@ -126,6 +109,44 @@ using UnityEngine;
         using (Packet packet = new Packet((int)ServerPackets.timePing))
         {
             packet.Write(timerId);
+            SendTCPData(toClient, packet);
+        }
+    }
+
+    public static void SendNewConnectedPlayerInit(int toClient, Vector2 position, int id, int type, float zRotations)
+    {
+        using (Packet packet = new Packet((int)ServerPackets.newPlayerJoined))
+        {
+
+            packet.Write(id);
+            packet.Write(type);
+            packet.Write(zRotations);         
+            packet.Write(position.x);
+            packet.Write(position.y);
+
+            SendTCPData(toClient, packet);
+        }
+
+                
+    }
+
+    public static void TowerShot(int toClient, int towerShotId)
+    {
+
+        using (Packet packet = new Packet((int)ServerPackets.towerShot))
+        {
+            packet.Write(towerShotId);
+            SendTCPData(toClient, packet);
+        }
+    }
+
+    public static void PlayerDied(int toClient, int deadPlayerId)
+    {
+
+        using (Packet packet = new Packet((int)ServerPackets.playerDied))
+        {
+            //send data
+            packet.Write(deadPlayerId);
             SendTCPData(toClient, packet);
         }
     }

@@ -22,6 +22,10 @@ public class CustomTileMap : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+
+    }
+    private void Awake()
+    {
         minionTiles = new List<GameObject>();
         generateMinionTiles();
         moveOrigin = new Vector2(-(((float)xySize.x / 2.0f) * distanceBetweenTiles), -(((float)xySize.y / 2.0f) * distanceBetweenTiles));
@@ -29,7 +33,6 @@ public class CustomTileMap : MonoBehaviour
         findStartAndEndTiles();
         colourStartAndEndTiles();
     }
-
     private void findStartAndEndTiles(){
         startTiles = new GameObject[2];
         endTiles = new GameObject[2];

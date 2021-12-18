@@ -279,6 +279,12 @@ PrefabInstance:
         type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7609bd76e5431fb4d82bf02ee63499a4, type: 3}
+--- !u!1 &1577195026 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3916811108540248820, guid: 7609bd76e5431fb4d82bf02ee63499a4,
+    type: 3}
+  m_PrefabInstance: {fileID: 1089703201}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1589337267
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -286,6 +292,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 652714343656459792, guid: 3bfff42426d30ff49885392fe0dfa47c,
+        type: 3}
+      propertyPath: tileSet
+      value: 
+      objectReference: {fileID: 1577195026}
     - target: {fileID: 652714343656459793, guid: 3bfff42426d30ff49885392fe0dfa47c,
         type: 3}
       propertyPath: m_RootOrder

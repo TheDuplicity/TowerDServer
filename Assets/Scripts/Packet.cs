@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Text;
 
 /// <summary>Sent from server to client.</summary>
-/// <summary>Sent from server to client.</summary>
 public enum ServerPackets
 {
     welcome = 1,
@@ -11,7 +10,9 @@ public enum ServerPackets
     joinGameData,
     timePing,
     sendWorldUpdate,
-    newPlayerJoined
+    newPlayerJoined,
+    towerShot,
+    playerDied
 }
 
 /// <summary>Sent from client to server.</summary>
@@ -23,10 +24,10 @@ public enum ClientPackets
     attemptTowerCreation,
     timePing,
     minionUpdate,
-    towerUpdate
+    towerUpdate,
+    shotBullet
 
 }
-
 
 public class Packet : IDisposable
     {

@@ -184,7 +184,8 @@ using System.Net.Sockets;
                 { (int)ClientPackets.attemptTowerCreation, ServerHandle.AttemptTowerCreation},
                 { (int)ClientPackets.timePing, ServerHandle.TimePing},
                 { (int)ClientPackets.minionUpdate, ServerHandle.MinionUpdate},
-                { (int)ClientPackets.towerUpdate, ServerHandle.TowerUpdate}
+                { (int)ClientPackets.towerUpdate, ServerHandle.TowerUpdate},
+                { (int)ClientPackets.shotBullet, ServerHandle.ShotBullet}
 
             };
 

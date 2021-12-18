@@ -22,7 +22,7 @@ public class GameManager : MonoBehaviour
 
     List<GameObject> minions;
     List<GameObject> towers;
-    private GameObject tileSet;
+    public GameObject tileSet;
      public GameObject minionPrefab;
      public GameObject towerPrefab;
 
@@ -34,6 +34,8 @@ public class GameManager : MonoBehaviour
 
     public int minionScore;
     public int towerScore;
+
+    private float sendPlayerUpdatesTimer;
 
     public static GameManager Instance { get; private set; }
 
@@ -52,16 +54,12 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+
         gameStarted = false;
-        //
-        //
-        //
-        //
-        //
+        sendPlayerUpdatesTimer = 0;
         gameTime = 0;
         minions = new List<GameObject>();
         towers = new List<GameObject>();
-        tileSet = GameObject.Find("Tiles");
 
         PathStart = tileSet.GetComponent<CustomTileMap>().startTiles[0].transform.position;
 
@@ -87,37 +85,81 @@ public class GameManager : MonoBehaviour
             }
         }
         gameTime += Time.deltaTime;
-
-
+        sendPlayerUpdatesTimer += Time.deltaTime;
+        if (sendPlayerUpdatesTimer > 0.05)
+        {
+            sendPlayerUpdatesTimer = 0;
+            sendDefaultUpdatesToEveryone();
+        }
 
 
     }
 
-    public void kickPlayer(int clientId)
+    public void KillPlayerAndUpdateClients(int deadPlayerId)
     {
+        //first send message to everyone saying the player died
+
+        foreach (GameObject minion in minions)
+        {
+            ServerSend.PlayerDied(minion.GetComponent<Controllable>().getId(), deadPlayerId);
+        }
+        foreach (GameObject tower in towers)
+        {
+            ServerSend.PlayerDied(tower.GetComponent<Controllable>().getId(), deadPlayerId);
+        }
+
+
         for (int i = 0; i < minions.Count; i++)
         {
-            if (minions[i].GetComponent<Controllable>().getId() == clientId)
+            if (minions[i].GetComponent<Controllable>().getId() == deadPlayerId)
             {
-                Destroy(minions[i].gameObject);
+                Destroy(minions[i]);
                 minions.RemoveAt(i);
                 return;
             }
+            
         }
-        for (int i = 0; i < towers.Count; i++)
-        {
-            if (towers[i].GetComponent<Controllable>().getId() == clientId)
+
+            for (int i = 0; i < towers.Count; i++)
             {
-                Destroy(towers[i].gameObject);
-                towers.RemoveAt(i);
+                if (towers[i].GetComponent<Controllable>().getId() == deadPlayerId)
+                {
+                    Destroy(towers[i]);
+                    towers.RemoveAt(i);
                 return;
+                }
+
             }
-        }
-
-        //kick player with this id
-
+        
 
     }
+
+    private GameObject returnObjectWithThisClientId(int clientId)
+    {
+        GameObject returnObj = returnMinionWithThisClientId(clientId);
+        if (returnObj == null)
+        {
+            returnObj = returnTowerWithThisClientId(clientId);
+        }
+        return returnObj;
+    }
+
+    public void shootBulletFromTower(int towerId)
+    {
+        returnTowerWithThisClientId(towerId).GetComponent<Tower>().Shoot();
+    }
+    public void SendTowerShotToAllPlayers(int shooterId)
+    {
+        foreach (GameObject player in minions)
+        {
+            ServerSend.TowerShot(player.GetComponent<Controllable>().getId(), shooterId);
+        }
+        foreach (GameObject player in towers)
+        {
+            ServerSend.TowerShot(player.GetComponent<Controllable>().getId(), shooterId);
+        }
+    }
+
 
     public void UpdateMinion(int clientId, minionDefaultMessage message)
     {
@@ -200,11 +242,40 @@ public class GameManager : MonoBehaviour
         }
         return messages;
     }
+
+    public void tellOtherPlayersIExist(int clientId)
+    {
+        GameObject newPlayerObject = returnMinionWithThisClientId(clientId);
+        if (newPlayerObject == null)
+        {
+            newPlayerObject = returnTowerWithThisClientId(clientId);
+        }
+
+        Vector2 pos = new Vector2(newPlayerObject.transform.position.x, newPlayerObject.transform.position.y);
+        int newPlayerType = newPlayerObject.GetComponent<Controllable>().type;
+        float newPlayerZRot = newPlayerObject.transform.rotation.eulerAngles.z;
+        int otherPlayerId = 0;
+        for (int i = 0; i < minions.Count; i++)
+        {
+            otherPlayerId = minions[i].GetComponent<Controllable>().getId();
+
+
+            //send a package to the oother players givine them this new object
+            ServerSend.SendNewConnectedPlayerInit(otherPlayerId, pos, clientId, newPlayerType, newPlayerZRot);
+        }
+        for (int i = 0; i < towers.Count; i++)
+        {
+            otherPlayerId = towers[i].GetComponent<Controllable>().getId();
+
+            ServerSend.SendNewConnectedPlayerInit(otherPlayerId, pos, clientId, newPlayerType, newPlayerZRot);
+        }
+    }
+
     public void sendWelcomePackage(int sendToId)
     {
         if (gameStarted)
         {
-            //send a package to the oother players givine them this new object
+            tellOtherPlayersIExist(sendToId);
         }
         int numPlayers= minions.Count + towers.Count;
         Vector2[] positions = new Vector2[numPlayers];
