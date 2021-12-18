@@ -4,11 +4,23 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+
+    struct minionDefaultMessage
+    {
+        Vector2 position;
+
+    }
+
+    //list of players that want to join and their tower types
+    Dictionary<int, int> clientsWaitingToJoinAsType;
+
     List<GameObject> minions;
     List<GameObject> towers;
     private GameObject tileSet;
      public GameObject minionPrefab;
      public GameObject towerPrefab;
+
+    public float gameTime { get; private set; }
 
     public bool gameStarted;
 
@@ -35,7 +47,12 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         gameStarted = false;
-
+        //
+        //
+        //
+        //
+        //
+        gameTime = 0;
         minions = new List<GameObject>();
         towers = new List<GameObject>();
         tileSet = GameObject.Find("Tiles");
@@ -55,32 +72,62 @@ public class GameManager : MonoBehaviour
         if (!gameStarted)
         {
             //if we have 2 players
-            if (minions.Count + towers.Count > 1) {
-                gameStarted = true;
+            if (minions.Count + towers.Count >= 1) {
                 startGame();
             }
+            else
+            {
+                return;
+            }
         }
+        gameTime += Time.deltaTime;
 
 
 
 
     }
 
-    public void sendWelcomePackage(int sendToId, int type)
+    public void kickPlayer(int clientId)
     {
-        int numOtherPlayers = minions.Count + towers.Count;
-        Vector2[] positions = new Vector2[numOtherPlayers];
-        int[] ids = new int[numOtherPlayers];
-        int[] types = new int[numOtherPlayers];
-        float[] zRotations = new float[numOtherPlayers];
-        //num players in total but we skip
         for (int i = 0; i < minions.Count; i++)
         {
-            if (ids[i] == sendToId)
+            if (minions[i].GetComponent<Controllable>().getId() == clientId)
             {
-                //skip if the object we're looking at is us
-                continue;
+                Destroy(minions[i].gameObject);
+                minions.RemoveAt(i);
+                return;
             }
+        }
+        for (int i = 0; i < towers.Count; i++)
+        {
+            if (towers[i].GetComponent<Controllable>().getId() == clientId)
+            {
+                Destroy(towers[i].gameObject);
+                towers.RemoveAt(i);
+                return;
+            }
+        }
+
+        //kick player with this id
+
+
+    }
+    private void getAllBasicClientData()
+    {
+
+    }
+    public void sendWelcomePackage(int sendToId)
+    {
+        int numPlayers= minions.Count + towers.Count;
+        Vector2[] positions = new Vector2[numPlayers];
+        int[] ids = new int[numPlayers];
+        int[] types = new int[numPlayers];
+        float[] zRotations = new float[numPlayers];
+        //num players in total but we skip
+
+        for (int i = 0; i < minions.Count; i++)
+        {
+            
             positions[i] = new Vector2(minions[i].transform.position.x, minions[i].transform.position.y);
             ids[i] = minions[i].GetComponent<Controllable>().getId();
             types[i] = 1;
@@ -89,63 +136,125 @@ public class GameManager : MonoBehaviour
         }
         for (int i = 0; i < towers.Count; i++)
         {
-            if (ids[i] == sendToId)
-            {
-                //skip if the object we're looking at is us
-                continue;
-            }
-            positions[i] = new Vector2(towers[i].transform.position.x, towers[i].transform.position.y);
-            ids[i] = towers[i].GetComponent<Controllable>().getId();
-            types[i] = 1;
-            zRotations[i] = 0;
+            int fillValArrayPos = i + minions.Count;
+            positions[fillValArrayPos] = new Vector2(towers[i].transform.position.x, towers[i].transform.position.y);
+            ids[fillValArrayPos] = towers[i].GetComponent<Controllable>().getId();
+            types[fillValArrayPos] = 0;
+            zRotations[fillValArrayPos] = 0;
         }
 
-        ServerSend.JoinGameData(sendToId, type, numOtherPlayers, positions, ids, types, zRotations);
+        ServerSend.JoinGameData(sendToId, gameTime, numPlayers, positions, ids, types, zRotations);
     }
 
     private void startGame()
     {
+        gameStarted = true;
         for (int i = 0; i < minions.Count; i++)
         {
-            sendWelcomePackage(minions[i].GetComponent<Controllable>().getId(), 1);
+            sendWelcomePackage(minions[i].GetComponent<Controllable>().getId());
         }
         for (int i = 0; i < towers.Count; i++)
         {
-            sendWelcomePackage(towers[i].GetComponent<Controllable>().getId(), 0);
+            sendWelcomePackage(towers[i].GetComponent<Controllable>().getId());
         }
     }
 
-    public GameObject addMinion(int clientId)
+    public bool addMinion(int clientId)
     {
+        if (clientAlreadyHasObject(clientId))
+        {
+            return false;
+        }
         GameObject newMinion = Instantiate(minionPrefab);
         newMinion.transform.position = PathStart;
         newMinion.GetComponent<Controllable>().setId(clientId);
         newMinion.GetComponent<Controllable>().type = 1;
         minions.Add(newMinion);
-        return newMinion;
+        return true;
     }
-    public GameObject addTower(int clientId)
+    public bool addTower(int clientId, Vector3 spawnPos)
     {
+        if (clientAlreadyHasObject(clientId))
+        {
+            return false;
+        }
+        Debug.Log($"spawning tower for client {clientId} at position {spawnPos}");
         GameObject newTower = Instantiate(towerPrefab);
         newTower.GetComponent<Controllable>().setId(clientId);
+        newTower.transform.position = spawnPos;
         newTower.GetComponent<Controllable>().type = 0;
         towers.Add(newTower);
-        return newTower;
+        return true;
     }
 
-    public bool checkIfTowerSpawnPosValid(Vector3 mouseCheckPos)
+    private bool clientAlreadyHasObject(int clientId)
     {
 
-        Vector3 mousePos = Camera.main.ScreenToWorldPoint(mouseCheckPos);
+        if (minions.Count > 0)
+        {
+            foreach (GameObject minion in minions)
+            {
+                if (minion.GetComponent<Controllable>().getId() == clientId)
+                {
+                    return true;
+                }
+            }
+        }
+        if (towers.Count > 0)
+        {
+            foreach (GameObject tower in towers)
+            {
+                if (tower.GetComponent<Controllable>().getId() == clientId)
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public bool trySpawnClientAsTower(int clientId, Vector3 mouseCheckPos)
+    {
+
+        Vector3 mouseWorldPos = Camera.main.ScreenToWorldPoint(mouseCheckPos);
         RaycastHit2D hit;
-        hit = Physics2D.Raycast(mousePos, new Vector3(0, 0, 1), 100);
-        if (hit) {
+        hit = Physics2D.Raycast(mouseWorldPos, new Vector3(0, 0, 1), 100);
+        if (hit)
+        {
             GameObject hitObj = hit.transform.gameObject;
             if (hitObj.tag == "TowerTile")
             {
-                return true;
+                if (!isTowerTileTaken(hitObj.transform.position))
+                {
+                    if(addTower(clientId, hitObj.transform.position))
+                    {
+                        return true;
+                    }
+                }
+                else
+                {
+                    Debug.Log($"couldnt spawn client {clientId}, tile occupied");
+                }
+                Debug.Log($"couldnt spawn client {clientId}, not on a valid tile");
+
+
             }
 
+        }
+        return false;
+    }
+    private bool isTowerTileTaken(Vector3 pos)
+    {
+        if (towers.Count <= 0)
+        {
+            return false;
+        }
+        for (int i = 0; i < towers.Count; i++)
+        {
+            if (towers[i].gameObject.transform.position == pos)
+            {
+                return true;
+            }
         }
         return false;
     }

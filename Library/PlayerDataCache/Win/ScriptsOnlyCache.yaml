@@ -47,19 +47,19 @@ ScriptsOnlyBuild:
     - Class: 104
       Script: {instanceID: 0}
     - Class: 114
-      Script: {instanceID: 13904}
+      Script: {instanceID: 11454}
     - Class: 114
-      Script: {instanceID: 14214}
+      Script: {instanceID: 12042}
     - Class: 114
-      Script: {instanceID: 14722}
+      Script: {instanceID: 13066}
     - Class: 114
-      Script: {instanceID: 14724}
+      Script: {instanceID: 13148}
     - Class: 114
-      Script: {instanceID: 14728}
+      Script: {instanceID: 13914}
     - Class: 114
-      Script: {instanceID: 14730}
+      Script: {instanceID: 14138}
     - Class: 114
-      Script: {instanceID: 14732}
+      Script: {instanceID: 14226}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 157
@@ -107,6 +107,12 @@ ScriptsOnlyBuild:
     assemblyName: UnityEngine.TestRunner.dll
     namespaceName: UnityEngine.TestTools.TestRunner.Callbacks
     className: PlayerQuitHandler
+  - hash:
+      serializedVersion: 2
+      Hash: 879684fb7e69c70ada8b7c67baf807f9
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: Minion
   - hash:
       serializedVersion: 2
       Hash: c3d3430df9e3ea95e3e3d587961390fb
@@ -253,6 +259,12 @@ ScriptsOnlyBuild:
     className: AnimationPlayableAsset
   - hash:
       serializedVersion: 2
+      Hash: ecda900661e23c50418b9ad39df47d26
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: Bullet
+  - hash:
+      serializedVersion: 2
       Hash: aba7b2852ef61d175dd9602e7723d5e5
     assemblyName: UnityEngine.UI.dll
     namespaceName: UnityEngine.UI
@@ -311,6 +323,12 @@ ScriptsOnlyBuild:
     assemblyName: UnityEngine.UI.dll
     namespaceName: UnityEngine.UI
     className: Selectable
+  - hash:
+      serializedVersion: 2
+      Hash: 1de69f48fe6698d93689277ae5ddccf7
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: Controllable
   - hash:
       serializedVersion: 2
       Hash: d4020bafcd3ccbb5601a6e6c8ac78be0
@@ -373,10 +391,22 @@ ScriptsOnlyBuild:
     className: RawImage
   - hash:
       serializedVersion: 2
+      Hash: 5e8e91ec2208f8e8fa9021247a1465c3
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: Tower
+  - hash:
+      serializedVersion: 2
       Hash: 5ad4aa237d47ac2bab17bacb672edf7a
     assemblyName: UnityEngine.UI.dll
     namespaceName: UnityEngine.UI
     className: VerticalLayoutGroup
+  - hash:
+      serializedVersion: 2
+      Hash: da95f555e67f7ffa2f2460ecdec25b75
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: GameManager
   - hash:
       serializedVersion: 2
       Hash: 71b711096c6c32621c1d4c02310898b7
@@ -479,6 +509,12 @@ ScriptsOnlyBuild:
     assemblyName: Unity.TextMeshPro.dll
     namespaceName: TMPro
     className: TMP_StyleSheet
+  - hash:
+      serializedVersion: 2
+      Hash: 9d5a58e11f0e0de2ce736e8a47ea925c
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: CustomTileMap
   - hash:
       serializedVersion: 2
       Hash: 8cd1cbba27f3cb1717254f668e9e0d5a
@@ -587,42 +623,6 @@ ScriptsOnlyBuild:
     assemblyName: Unity.Timeline.dll
     namespaceName: UnityEngine.Timeline
     className: PlayableTrack
-  - hash:
-      serializedVersion: 2
-      Hash: 879684fb7e69c70ada8b7c67baf807f9
-    assemblyName: Assembly-CSharp.dll
-    namespaceName: 
-    className: Minion
-  - hash:
-      serializedVersion: 2
-      Hash: ecda900661e23c50418b9ad39df47d26
-    assemblyName: Assembly-CSharp.dll
-    namespaceName: 
-    className: Bullet
-  - hash:
-      serializedVersion: 2
-      Hash: 1de69f48fe6698d93689277ae5ddccf7
-    assemblyName: Assembly-CSharp.dll
-    namespaceName: 
-    className: Controllable
-  - hash:
-      serializedVersion: 2
-      Hash: 5e8e91ec2208f8e8fa9021247a1465c3
-    assemblyName: Assembly-CSharp.dll
-    namespaceName: 
-    className: Tower
-  - hash:
-      serializedVersion: 2
-      Hash: da95f555e67f7ffa2f2460ecdec25b75
-    assemblyName: Assembly-CSharp.dll
-    namespaceName: 
-    className: GameManager
-  - hash:
-      serializedVersion: 2
-      Hash: 9d5a58e11f0e0de2ce736e8a47ea925c
-    assemblyName: Assembly-CSharp.dll
-    namespaceName: 
-    className: CustomTileMap
   platform: 5
   scenePathNames:
   - Assets/Scenes/SampleScene.unity

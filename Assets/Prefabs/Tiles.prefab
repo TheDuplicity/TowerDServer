@@ -46,8 +46,12 @@ MonoBehaviour:
   xySize: {x: 16, y: 16}
   towerTilePositions: []
   minionTilePositions: []
+  startTiles: []
+  endTiles: []
   referenceTowerTile: {fileID: 8972237842874689520, guid: a77a796664a2d954abfe689945b77795,
     type: 3}
   referenceMinionTile: {fileID: 4438507236185813425, guid: 88c5769bbfd47514a9cfcdd1bfd5700a,
+    type: 3}
+  referenceFinishTile: {fileID: 2337338000171052959, guid: a0805f14f88805641b0733686305c114,
     type: 3}
   distanceBetweenTiles: 1

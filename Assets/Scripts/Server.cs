@@ -180,7 +180,10 @@ using System.Net.Sockets;
             {
                 { (int)ClientPackets.welcomeReceived, ServerHandle.WelcomeReceived},
                 { (int)ClientPackets.clientAlive, ServerHandle.ClientAlive },
-                { (int)ClientPackets.chosePlayerType, ServerHandle.ChosePlayerType}
+                { (int)ClientPackets.attemptMinionCreation, ServerHandle.AttemptMinionCreation},
+                { (int)ClientPackets.attemptTowerCreation, ServerHandle.AttemptTowerCreation},
+                { (int)ClientPackets.timePing, ServerHandle.TimePing}
+
             };
 
             Debug.Log("initialised packets");

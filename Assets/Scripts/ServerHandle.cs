@@ -34,25 +34,45 @@ public class ServerHandle : MonoBehaviour
         {
             //have a timer that only gets reset once it gets an alive response
             Server.clients[fromClient].connectedTimer = 0;
-            Debug.Log($"client {fromClient} alive");
+            //Debug.Log($"client {fromClient} alive");
         }
     }
 
-    public static void ChosePlayerType(int fromClient, Packet packet)
+    public static void AttemptMinionCreation(int fromClient, Packet packet)
     {
-        Debug.Log("received player type: sending back");
-        int type = packet.ReadInt();
+        Debug.Log($"player {fromClient} wants to be minion");
 
 
-       // ServerSend.JoinGameData(fromClient, type, 1,suh, suhi,ftype,rot);
-        if (type == 0)
+        if (GameManager.Instance.addMinion(fromClient))
         {
-            GameManager.Instance.addTower(fromClient);
-        } else if (type == 1)
-        {
-            GameManager.Instance.addMinion(fromClient);
+            if (GameManager.Instance.gameStarted)
+            {
+                GameManager.Instance.sendWelcomePackage(fromClient);
+            }
         }
+        
 
+    }
+
+
+    public static void AttemptTowerCreation(int fromClient, Packet packet)
+    {
+        Vector3 towerMousePos = new Vector3(packet.ReadFloat(), packet.ReadFloat(), packet.ReadFloat());
+        //if you were spawned and the game has started: send welcome package
+        if(GameManager.Instance.trySpawnClientAsTower(fromClient, towerMousePos))
+        {
+
+            if (GameManager.Instance.gameStarted)
+            {
+                GameManager.Instance.sendWelcomePackage(fromClient);
+            }
+        }
+    }
+    public static void TimePing(int fromClient, Packet packet)
+    {
+        //send a ping back immediately which will stop the timer on the other side to get round trip time
+        int timerId = packet.ReadInt();
+        ServerSend.TimePing(fromClient, timerId);
     }
 
 }

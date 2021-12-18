@@ -57,6 +57,10 @@ using System.Net.Sockets;
         public void closeSocket()
         {
             if (active) {
+                GameManager.Instance.kickPlayer(id);
+                
+
+                
                 active = false;
                 Debug.Log($"received message to close socket {id}.");
                 ServerSend.ServerAliveImmediate(id, false);
@@ -171,11 +175,10 @@ using System.Net.Sockets;
                 catch (Exception ex)
                 {
                     Debug.Log($"Error receiving TCP data: {ex}");
-                    
                 closeSocket();
-                 
+
                 //disconnect client
-                }
+            }
             }
 
         private bool HandleData(byte[] data)

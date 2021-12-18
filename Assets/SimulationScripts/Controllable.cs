@@ -26,16 +26,16 @@ public class Controllable : MonoBehaviour
 
     private void Update()
     {
-
+        /*
         if (readyToGetWelcomePackage)
         {
             if (GameManager.Instance.gameStarted)
             {
-                GameManager.Instance.sendWelcomePackage(id, type);
+                GameManager.Instance.sendWelcomePackage(id);
             }
 
         }
-
+        */
         while (messages.Count > maxMessages)
         {
             messages.Dequeue();

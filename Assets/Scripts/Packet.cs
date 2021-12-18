@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Text;
 
-
 /// <summary>Sent from server to client.</summary>
 public enum ServerPackets
 {
     welcome = 1,
     serverAlive = 2,
-    joinGameData
+    joinGameData,
+    timePing
 }
 
 /// <summary>Sent from client to server.</summary>
@@ -16,8 +16,9 @@ public enum ClientPackets
 {
     welcomeReceived = 1,
     clientAlive = 2,
-    chosePlayerType,
-    towerCreated
+    attemptMinionCreation,
+    attemptTowerCreation,
+    timePing
 
 }
 
